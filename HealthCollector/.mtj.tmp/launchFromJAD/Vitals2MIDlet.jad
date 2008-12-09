@@ -1,0 +1,9 @@
+MIDlet-1: VitalsMIDlet,/Heart.png,hks.itprojects.vitalsUI.VitalsMIDlet
+MIDlet-Icon: Hearts.png
+MIDlet-Jar-Size: 1319923
+MIDlet-Jar-URL: Vitals2MIDlet.jar
+MIDlet-Name: Vitals
+MIDlet-Vendor: Henning Knut Skoglund
+MIDlet-Version: 1.0.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0
