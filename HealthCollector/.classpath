@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="org.elipse.mtj.JavaMEContainer/Sony Ericsson SDK 2.5.0 for the Java(TM) ME Platform(Emulator)/SonyEricsson_JP7_240x320_Emu"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/LWUIT"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/KXML2"/>
-	<classpathentry exported="true" kind="lib" path="C:/Documents and Settings/henning/Mine dokumenter/LWUITThemes.zip"/>
+	<classpathentry exported="true" kind="lib" path="UITheme/LWUITThemes.zip"/>
+	<classpathentry exported="true" kind="lib" path="KXML2 library/kxml2-min-2.3.0.zip"/>
+	<classpathentry exported="true" kind="lib" path="LWUIT library/LWUIT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

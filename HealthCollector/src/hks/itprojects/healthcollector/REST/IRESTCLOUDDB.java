@@ -12,14 +12,21 @@ import com.sun.lwuit.list.ListModel;
 
 public interface IRESTCLOUDDB
 	{
+		/**
+		 * Check access to DB should return HTTP_OK
+		 * @return HttpResponse
+		 * @throws IOException
+		 */
+		public abstract HttpResponse checkAccess()
+				throws IOException;
 
-		public abstract HttpResponse createWoundContainer(String woundId)
+		public abstract HttpResponse createContainer(String container)
 				throws IOException;
 		
 		public abstract HttpResponse createWoundThumbnailReference(String woundId, Thumbnail thumbnail) throws IOException;
 
 		
-		public abstract boolean woundContainerExist(String woundContainer) throws IOException;
+		public abstract boolean containerExist(String woundContainer) throws IOException;
 
 		public abstract HttpResponse createBloodPressure(
 				BloodPressure bloodPressure) throws IOException;
@@ -39,5 +46,6 @@ public interface IRESTCLOUDDB
 
 		public abstract HttpResponse readWoundThumbnail(String woundContainer, Thumbnail thumbnail) throws IOException;
 
+		public abstract String getServiceName();
 
 	}

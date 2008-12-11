@@ -23,8 +23,6 @@ public class FormDateTime extends Form implements SelectionListener  {
     private com.sun.lwuit.Calendar calendarLWUIT;
     private java.util.Calendar cal;
 
-    private HealthCollectorMIDlet parentMIDlet;
-
     private ComboBox cbHours = null;
     private ComboBox cbMinutes = null;
     
@@ -34,9 +32,8 @@ public class FormDateTime extends Form implements SelectionListener  {
     
     private Command cmdDateFormOK;
     
-    public FormDateTime(String title, HealthCollectorMIDlet parentMIDlet, ActionListener actionListener, Date date) {
+    public FormDateTime(String title, ActionListener actionListener, Date date) {
         super(title);
-        this.parentMIDlet = parentMIDlet;
         calendarLWUIT = new com.sun.lwuit.Calendar(date.getTime());
        
         cal = java.util.Calendar.getInstance(); 

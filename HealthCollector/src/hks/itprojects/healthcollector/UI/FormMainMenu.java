@@ -139,28 +139,23 @@ public class FormMainMenu extends Form implements ActionListener {
         // Observation - button will be in state STATE_ROLLOVER after clicked
         
         // Buttons
-        if (btnBloodPressure == btnSource) {
-        	   parentMIDlet.bloodPressureScr = new FormBloodPressure("Registrer måling",parentMIDlet);
-          	  parentMIDlet.bloodPressureScr.show();
-        }
-         
-        if (btnBPOverview == btnSource) {
-            parentMIDlet.overviewBPScr = new FormBPOverview("Blodtrykksoversikt",parentMIDlet);
-//            if (!parentMIDlet.overviewBPScr.noRegisteredBloodPressures)
-//             parentMIDlet.overviewBPScr.show();
-//            else
-//             parentMIDlet.overviewBPScr = null;
-        }
         
-//        if (btnTest == btnSource) 
-//        	runBLOBTest();
-
+        if (btnBloodPressure == btnSource) {
+        	   FormBloodPressure bloodPressureScr = new FormBloodPressure("Registrer måling",parentMIDlet);
+          	  bloodPressureScr.show();
+        }
+        else
+        if (btnBPOverview == btnSource) {
+        	FormBPOverview overviewBPScr = new FormBPOverview("Blodtrykksoversikt",parentMIDlet);
+        }
+            
+            else
         if (btnWoundOverview == btnSource)
         	{
         		FormWoundOverview woundOverviewForm = new FormWoundOverview("Oversikt sår",parentMIDlet);
         		
         	}
-        
+        else        
         if (btnRegisterWound == btnSource)
         {
         	FormWound woundForm = new FormWound("Registrer sår",this.parentMIDlet);
@@ -169,10 +164,11 @@ public class FormMainMenu extends Form implements ActionListener {
         
         // Commands
         
-        if (c == cmdLogout)
-            parentMIDlet.loginScr.show();
-        
-       
+        if (c == cmdLogout) {
+        	FormLogin loginScr = 
+        			new FormLogin("Innlogging", parentMIDlet);
+        	loginScr.show();
+        }
        
     }
     

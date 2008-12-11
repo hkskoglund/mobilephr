@@ -333,8 +333,9 @@ public class FormWoundOverview extends Form implements ActionListener, Selection
 					} catch (InterruptedException e1)
 					{
 					}
-		    	
-		         parentMIDlet.menuScr.show();
+					
+					FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
+		    	    menuScr.show();
 		     } else
 		    	 
 		    	 if (c == cmdFullScreen && lbThumbnails.getModel().getSize() > 0) {
@@ -369,7 +370,7 @@ public class FormWoundOverview extends Form implements ActionListener, Selection
 			
 			try
 				{
-					if (cloudDB.woundContainerExist(wound.getId())) {
+					if (cloudDB.containerExist(wound.getId())) {
 
 						lbThumbnails.setModel(new ThumbnailCloudModel()); // Create new thumbnail model
 

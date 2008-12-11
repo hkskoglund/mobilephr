@@ -120,7 +120,7 @@ public class FormBloodPressure extends Form implements ActionListener {
         if (objSource != null)
           if (btnChangeDate == objSource)
           {
-            dateScr = new FormDateTime("Endre dato/tid",parentMIDlet,this,date);
+            dateScr = new FormDateTime("Endre dato/tid",this,date);
             dateScr.show();
        
           }
@@ -129,8 +129,10 @@ public class FormBloodPressure extends Form implements ActionListener {
         if (c == cmdSend) 
           sendBloodPressure();
         else    
-        if (c == cmdMenu)
-          parentMIDlet.menuScr.show();
+        if (c == cmdMenu) {
+        	FormMainMenu menuScr = new FormMainMenu("Hoved meny",parentMIDlet);
+            menuScr.show();	
+        }
         else
         // From dateForm
         if (dateScr != null && c == dateScr.getCmdDateFormOK())

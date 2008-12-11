@@ -115,15 +115,18 @@ public class FormWound extends Form implements ActionListener
 		        if (objSource != null)
 		          if (btnChangeDate == objSource)
 		          {
-		            dateScr = new FormDateTime("Endre dato/tid",parentMIDlet,this,date);
+		            dateScr = new FormDateTime("Endre dato/tid",this,date);
 		            dateScr.show();
 		       
 		          }
 		        
 
-				if (c == cmdMenu)
-					parentMIDlet.menuScr.show();
+				if (c == cmdMenu) {
+					FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
+					menuScr.show();
 
+				}
+					
 				if (c == cmdSend)
 					sendWound(lThumbnails.getModel());
 

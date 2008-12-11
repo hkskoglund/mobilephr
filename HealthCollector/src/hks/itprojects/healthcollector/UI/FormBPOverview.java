@@ -389,7 +389,8 @@ public class FormBPOverview extends Form implements ActionListener, SelectionLis
 			{
 			}
        
-         parentMIDlet.menuScr.show();
+			FormMainMenu menuScr = new FormMainMenu("Hoved meny",parentMIDlet);
+         menuScr.show();
      }
      }
 

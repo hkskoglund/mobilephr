@@ -83,14 +83,18 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 																		// (BASIC
 																		// Authentication)
 			}
-
-		public HttpResponse createWoundContainer(String woundContainer)
-				throws IOException
+		
+		/* (non-Javadoc)
+		 * @see hks.itprojects.healthcollector.REST.IRESTCLOUDDB#checkAccess()
+		 */
+		public HttpResponse checkAccess() throws IOException
 			{
-				return CreateContainer(woundContainer);
+				HttpResponse hResponse = netManager.readXML(AuthorityURI, sdsContentType);
+			    return hResponse;
+				
 			}
 
-		public boolean woundContainerExist(String woundContainer)
+		public boolean containerExist(String woundContainer)
 				throws IOException
 			{
 				HttpResponse hResponse = netManager.readXML(this
@@ -105,7 +109,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 					return false;
 			}
 
-		protected HttpResponse CreateContainer(String container)
+		public HttpResponse createContainer(String container)
 				throws IOException
 			{
 				String cont = "<s:Container xmlns:s='http://schemas.microsoft.com/sitka/2008/03/'>"
@@ -116,16 +120,19 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				return hResponse;
 			}
 
-		protected HttpResponse CreateEntity(String container, String xmlEntity)
+		protected HttpResponse createEntity(String container, String xmlEntity)
 				throws IOException
 			{
+				if (!containerExist(container))
+					createContainer(container);
+					
 				HttpResponse hResponse = netManager.writeXML(xmlEntity, this
 						.makeUriCompatible(getAuthorityURI() + container),
 						sdsContentType);
 				return hResponse;
 			}
 
-		protected HttpResponse CreateBLOB(byte[] thumbnailData,
+		protected HttpResponse createBLOB(byte[] thumbnailData,
 				String container, String MIMEType, String slug,
 				String contentDisposition) throws IOException
 			{
@@ -283,7 +290,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 						+ propertyDiastolic + "\n" + propertyHR + "\n"
 						+ propertyDate + "\n" + entityEnd;
 
-				HttpResponse hResponse = CreateEntity(phrContainer,
+				HttpResponse hResponse = createEntity(phrContainer,
 						xmlBloodpressure);
 
 				return hResponse;
@@ -317,7 +324,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 						+ propertyDate + "\n" + entityEnd;
 
 				// Store wound entity
-				HttpResponse hResponse = CreateEntity(phrContainer, xmlWound);
+				HttpResponse hResponse = createEntity(phrContainer, xmlWound);
 
 				return hResponse;
 
@@ -332,7 +339,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				String id = "THUMBNAIL" + Utility.getMilliSecondDate();
 				thumbnail.setId(id);
 
-				HttpResponse hResponse = CreateBLOB(thumbnail
+				HttpResponse hResponse = createBLOB(thumbnail
 						.getThumbnailData(), woundContainer, jpegMIMEType,
 						thumbnail.getId(), thumbnail.getFileName());
 
@@ -387,7 +394,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 						+ entityEnd;
 
 				// Store wound entity
-				HttpResponse hResponse = CreateEntity(woundContainer,
+				HttpResponse hResponse = createEntity(woundContainer,
 						xmlReference);
 
 				return hResponse;
@@ -491,44 +498,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 					}
 			}
 
-		// KXML-library copyright notice
-
-		// Copyright (c) 2002-2007 Stefan Haustein, Oberhausen, Rhld., Germany
-		//
-		// Permission is hereby granted, free of charge, to any person obtaining
-		// a
-		// copy
-		// of this software and associated documentation files (the "Software"),
-		// to
-		// deal
-		// in the Software without restriction, including without limitation the
-		// rights
-		// to use, copy, modify, merge, publish, distribute, sublicense, and/or
-		// sell copies of the Software, and to permit persons to whom the
-		// Software
-		// is
-		// furnished to do so, subject to the following conditions:
-		//
-		// The above copyright notice and this permission notice shall be
-		// included
-		// in
-		// all copies or substantial portions of the Software.
-		//
-		// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-		// EXPRESS
-		// OR
-		// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-		// MERCHANTABILITY,
-		// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
-		// SHALL
-		// THE
-		// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-		// OTHER
-		// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-		// ARISING
-		// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-		// DEALINGS
-		// IN THE SOFTWARE.
+		
 
 		// My below XML parsing code is based on KXmlRssParser
 
@@ -952,6 +922,11 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 
 				Date d = cal.getTime();
 				return d;
+			}
+
+		public String getServiceName()
+			{
+				return "Microsoft SQL Data Service";
 			}
 
 	}

@@ -103,9 +103,9 @@ public class SendWoundInBackground implements Runnable {
 				
 				try
 				{
-					if (!cloudDB.woundContainerExist(woundContainer))
+					if (!cloudDB.containerExist(woundContainer))
 						{
-							HttpResponse hRespContainer = cloudDB.createWoundContainer(woundContainer);
+							HttpResponse hRespContainer = cloudDB.createContainer(woundContainer);
 						}
 				} catch (IOException ioe)
 					{
