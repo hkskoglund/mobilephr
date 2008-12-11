@@ -21,31 +21,15 @@ public interface IRESTCLOUDDB
 		
 		public abstract boolean woundContainerExist(String woundContainer) throws IOException;
 
-
-		/* (non-Javadoc)
-		 * @see hks.itprojects.healthcollector.azureSDS.IREST#createBloodPressure(hks.itprojects.healthcollector.PHR.PHRManager, hks.itprojects.healthcollector.PHR.BloodPressure)
-		 */
-		/* (non-Javadoc)
-		 * @see hks.itprojects.healthcollector.REST.IREST#createBloodPressure(hks.itprojects.healthcollector.PHR.BloodPressure)
-		 */
 		public abstract HttpResponse createBloodPressure(
 				BloodPressure bloodPressure) throws IOException;
 
-		/* (non-Javadoc)
-		 * @see hks.itprojects.healthcollector.REST.IREST#createWound(hks.itprojects.healthcollector.PHR.Wound)
-		 */
 		public abstract HttpResponse createWound(Wound wound)
 				throws IOException;
 
-		/* (non-Javadoc)
-		 * @see hks.itprojects.healthcollector.REST.IREST#createWoundThumbnails(hks.itprojects.healthcollector.PHR.Wound)
-		 */
 		public abstract HttpResponse createWoundThumbnail(String woundId,
 				Thumbnail thumbnail) throws IOException;
 
-		/* (non-Javadoc)
-		 * @see hks.itprojects.healthcollector.REST.IREST#queryBloodPressures(java.lang.String)
-		 */
 		public abstract void queryBloodPressures(String SortDirection, ListModel bpModel)
 				throws IOException, XmlPullParserException;
 		
