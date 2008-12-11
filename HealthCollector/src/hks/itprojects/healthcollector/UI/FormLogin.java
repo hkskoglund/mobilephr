@@ -177,7 +177,7 @@ public class FormLogin extends Form implements ActionListener
 						
 						if (update) {
 							byte [] userdata = user.toByteArray();
-									rs.setRecord(0, userdata, 0, userdata.length);
+									rs.setRecord(1, userdata, 0, userdata.length);
 						}
 					} else
 
@@ -252,7 +252,7 @@ public class FormLogin extends Form implements ActionListener
 									//e.printStackTrace();
 								}
 							FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
-						     menuScr.show();	
+						    menuScr.show();	
 						}
 					   
 				}
