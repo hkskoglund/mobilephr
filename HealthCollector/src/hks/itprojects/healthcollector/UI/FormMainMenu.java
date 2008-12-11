@@ -166,7 +166,7 @@ public class FormMainMenu extends Form implements ActionListener {
         
         if (c == cmdLogout) {
         	FormLogin loginScr = 
-        			new FormLogin("Innlogging", parentMIDlet);
+        			new FormLogin(parentMIDlet);
         	loginScr.show();
         }
        

@@ -62,7 +62,7 @@ public class HealthCollectorMIDlet extends MIDlet
 				FormLogin loginScr;
 				// Login
 
-				loginScr = new FormLogin("Innlogging", this);
+				loginScr = new FormLogin(this);
 
 				loginScr.show();
 			}

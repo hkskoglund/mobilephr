@@ -2,12 +2,17 @@ package hks.itprojects.healthcollector.UI;
 
 import java.io.IOException;
 
+import hks.itprojects.healthcollector.REST.IRESTCLOUDDB;
+import hks.itprojects.healthcollector.REST.MicrosoftSDS;
 import hks.itprojects.healthcollector.authorization.LoginUser;
+import hks.itprojects.healthcollector.network.HttpResponse;
 
 import com.sun.lwuit.*;
 import com.sun.lwuit.events.*;
 import com.sun.lwuit.animations.*;
 import com.sun.lwuit.layouts.*;
+
+import javax.microedition.io.HttpsConnection;
 import javax.microedition.rms.*;
 
 /**
@@ -20,18 +25,23 @@ public class FormLogin extends Form implements ActionListener
 		// Fields
 		private TextArea tfPassword;
 		private TextArea tfUsername;
+		private TextArea tfLoginStatus;
 
 		// Commands
 		private Command cmdExit;
 		private Command cmdLogin;
 
-		private HealthCollectorMIDlet parentMIDlet = null;
 		
 		// RMS
 		private RecordStore rs = null;
 		private LoginUser user = null;
 
-		public FormLogin(String title, HealthCollectorMIDlet parentMIDlet)
+		private HealthCollectorMIDlet parentMIDlet = null;
+		
+		private IRESTCLOUDDB cloudDB = null;
+		private final String authorityID = "hks";
+		
+		public FormLogin(HealthCollectorMIDlet parentMIDlet)
 			{
 				super("Innlogging");
 				this.parentMIDlet = parentMIDlet;
@@ -60,6 +70,12 @@ public class FormLogin extends Form implements ActionListener
 				addComponent(lblPassword);
 				tfPassword = new TextArea(null, 1, 1, TextArea.PASSWORD);
 				addComponent(tfPassword);
+				
+				// Status
+				Label lblStatus = new Label("Status");
+				addComponent(lblStatus);
+				tfLoginStatus = new TextArea(null,2,20,TextArea.UNEDITABLE);
+				addComponent(tfLoginStatus);
 
 				// Commands
 
@@ -80,10 +96,11 @@ public class FormLogin extends Form implements ActionListener
 				
 			    try
 					{
-						if (rs.getNumRecords() == 1) {
+						int numrec = rs.getNumRecords();
+						if (numrec == 1) {
 				            // Retrive user from DB
 							user = new LoginUser();
-							user.fromByteArray(rs.getRecord(0));
+							user.fromByteArray(rs.getRecord(1));
 							// Update UI
 							tfUsername.setText(user.getUserName());
 							tfPassword.setText(user.getPassword());
@@ -140,12 +157,13 @@ public class FormLogin extends Form implements ActionListener
 		private void saveLoginUser(String username, String password)
 			{
 				boolean update  = false;
-               // Case 1 : User already stored
 				
 				openAuthorizationDB();
 				
 				try {
-				if (user != null)
+		               // Case 1 : User already stored
+
+					if (user != null)
 					{
 						if (!user.getUserName().equals(username)) {
 							user.setUserName(username);
@@ -162,45 +180,81 @@ public class FormLogin extends Form implements ActionListener
 									rs.setRecord(0, userdata, 0, userdata.length);
 						}
 					} else
-				
+
+			// Case 2 : User not previously stored
 				if (user == null && rs.getNumRecords()==0) {
 			       user = new LoginUser();
 			       user.setPassword(password);
 			       user.setUserName(username);
 					byte [] userdata = user.toByteArray();
-							rs.addRecord(userdata, 0, userdata.length);
+						 int recId =	rs.addRecord(userdata, 0, userdata.length);
 						}
 				
 				closeAuthorizationDB();
 				
 				} catch (IOException ioe)
 					{
-						// TO DO
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Problemer med aksess til autorisasjons database; "+ioe.getMessage());
 					}
 				catch (RecordStoreNotOpenException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database er ikke åpen; "+e.getMessage());
 					} catch (RecordStoreFullException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database er full; "+e.getMessage());
 					} catch (RecordStoreException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database feil ved aksess; "+e.getMessage());
 					}
-				
 			}
 		
 		public void actionPerformed(ActionEvent ae)
 			{
 				Command c = ae.getCommand();
-
+                StringBuffer loginStatus = new StringBuffer();
+                boolean proceedWithLogin = false;
+				
 				if (c == cmdLogin) {
 					   saveLoginUser(tfUsername.getText(),tfPassword.getText());
-					   FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
-				       menuScr.show();
+					   cloudDB = new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),this.authorityID,user.getUserName(),user.getPassword());
+					   loginStatus.append(cloudDB.getServiceName()+"\n");
+					   HttpResponse hResponse = null;
+					   try
+						{
+						    hResponse = cloudDB.checkAccess();
+						} catch (IOException e)
+						{
+							HealthCollectorMIDlet.showErrorMessage("FEIL", "Klarte ikke å sjekke aksess til database-tjenesten; "+e.getMessage());
+						}
+					   
+						if (hResponse != null)
+							{
+								if (hResponse.getCode() == HttpsConnection.HTTP_OK) {
+										{ 
+											loginStatus.append("Velykket innlogging!");
+											proceedWithLogin = true;					
+										}
+								} else 
+									loginStatus.append("Kan ikke logge inn; "+hResponse.getMessage());
+							} else
+
+								HealthCollectorMIDlet.showErrorMessage("FEIL", "Udefinert respons fra database-tjenesten");
+						
+						tfLoginStatus.setText(loginStatus.toString());
+						
+						if (proceedWithLogin) {
+							try
+								{
+									Thread.sleep(500); // Allow some time to show login succeeded!
+								} catch (InterruptedException e)
+								{
+									// TODO Auto-generated catch block
+									//e.printStackTrace();
+								}
+							FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
+						     menuScr.show();	
+						}
+					   
 				}
 				if (c == cmdExit)
 					parentMIDlet.stopApplication();
