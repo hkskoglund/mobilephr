@@ -929,4 +929,9 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				return "Microsoft SQL Data Service";
 			}
 
+		public String getServiceAddress()
+			{
+				return getAuthorityURI();
+			}
+
 	}

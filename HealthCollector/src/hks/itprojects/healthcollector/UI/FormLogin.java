@@ -32,8 +32,6 @@ public class FormLogin extends Form implements ActionListener
 		private Command cmdLogin;
 
 		
-		// RMS
-		private RecordStore rs = null;
 		private LoginUser user = null;
 
 		private HealthCollectorMIDlet parentMIDlet = null;
@@ -90,9 +88,13 @@ public class FormLogin extends Form implements ActionListener
 
 			}
 
+		/**
+		 * Retrieves user login information from RMS authorization database
+		 */
 		private void getLoginAuthorization()
 			{
-					openAuthorizationDB();
+				
+			RecordStore rs = openAuthorizationDB();
 				
 			    try
 					{
@@ -126,10 +128,10 @@ public class FormLogin extends Form implements ActionListener
 						e.printStackTrace();
 					}
 					
-					closeAuthorizationDB();
+					closeAuthorizationDB(rs);
 			}
 
-		private void closeAuthorizationDB()
+		private void closeAuthorizationDB(RecordStore rs)
 			{
 				try
 					{
@@ -145,23 +147,43 @@ public class FormLogin extends Form implements ActionListener
 					}
 			}
 		
-		private void openAuthorizationDB()
+		private RecordStore openAuthorizationDB()
 			{
+				RecordStore rs = null;
+		
 				try {
 					rs = RecordStore.openRecordStore("Authorization", true, RecordStore.AUTHMODE_PRIVATE, true);
 				} catch (RecordStoreException rse) {
 					HealthCollectorMIDlet.showErrorMessage("FEIL","Problemer med tilgang til autorisasjons informasjon i RMS; "+rse.getMessage());
 				}
+				
+				return rs;
 			}
 		
 		private void saveLoginUser(String username, String password)
 			{
 				boolean update  = false;
+			
+				// Validate
+				if (username == null || password == null)
+					{
+						HealthCollectorMIDlet.showErrorMessage("BRUKERNAVN/PASSORD","Brukernavn eller passord ikke definert");
+						return;
+						
+					}
 				
-				openAuthorizationDB();
+				if (username.length()==0 || password.length()==0)
+					{
+						HealthCollectorMIDlet.showErrorMessage("BRUKERNAVN/PASSORD","Brukernavn eller passord ikke angitt");
+					    return;		
+					}
+				
+			
+				   
+				RecordStore rs = openAuthorizationDB();
 				
 				try {
-		               // Case 1 : User already stored
+		               // Case 1 : User already stored - record nr. 1
 
 					if (user != null)
 					{
@@ -190,7 +212,7 @@ public class FormLogin extends Form implements ActionListener
 						 int recId =	rs.addRecord(userdata, 0, userdata.length);
 						}
 				
-				closeAuthorizationDB();
+				closeAuthorizationDB(rs);
 				
 				} catch (IOException ioe)
 					{
@@ -211,54 +233,63 @@ public class FormLogin extends Form implements ActionListener
 		public void actionPerformed(ActionEvent ae)
 			{
 				Command c = ae.getCommand();
-                StringBuffer loginStatus = new StringBuffer();
-                boolean proceedWithLogin = false;
-				
+           	
 				if (c == cmdLogin) {
-					   saveLoginUser(tfUsername.getText(),tfPassword.getText());
-					   cloudDB = new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),this.authorityID,user.getUserName(),user.getPassword());
-					   loginStatus.append(cloudDB.getServiceName()+"\n");
-					   HttpResponse hResponse = null;
-					   try
-						{
-						    hResponse = cloudDB.checkAccess();
-						} catch (IOException e)
-						{
-							HealthCollectorMIDlet.showErrorMessage("FEIL", "Klarte ikke å sjekke aksess til database-tjenesten; "+e.getMessage());
-						}
+					   performLogin();
 					   
-						if (hResponse != null)
-							{
-								if (hResponse.getCode() == HttpsConnection.HTTP_OK) {
-										{ 
-											loginStatus.append("Velykket innlogging!");
-											proceedWithLogin = true;					
-										}
-								} else 
-									loginStatus.append("Kan ikke logge inn; "+hResponse.getMessage());
-							} else
-
-								HealthCollectorMIDlet.showErrorMessage("FEIL", "Udefinert respons fra database-tjenesten");
-						
-						tfLoginStatus.setText(loginStatus.toString());
-						
-						if (proceedWithLogin) {
-							try
-								{
-									Thread.sleep(500); // Allow some time to show login succeeded!
-								} catch (InterruptedException e)
-								{
-									// TODO Auto-generated catch block
-									//e.printStackTrace();
-								}
-							FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
-						    menuScr.show();	
-						}
-					   
-				}
+				} else
 				if (c == cmdExit)
 					parentMIDlet.stopApplication();
 
+			}
+
+		private void performLogin()
+			{
+			     StringBuffer loginStatus = new StringBuffer();
+	             boolean proceedWithLogin = false;
+				
+				
+				saveLoginUser(tfUsername.getText(),tfPassword.getText());
+				   cloudDB = new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),this.authorityID,user.getUserName(),user.getPassword());
+				   loginStatus.append(cloudDB.getServiceName()+"\n");
+				   loginStatus.append(cloudDB.getServiceAddress()+"\n");
+				   HttpResponse hResponse = null;
+				   try
+					{
+					    hResponse = cloudDB.checkAccess();
+					} catch (IOException e)
+					{
+						HealthCollectorMIDlet.showErrorMessage("FEIL", "Klarte ikke å sjekke aksess til database-tjenesten; "+e.getMessage());
+					}
+				   
+					if (hResponse != null)
+						{
+							if (hResponse.getCode() == HttpsConnection.HTTP_OK) {
+									{ 
+										loginStatus.append("Velykket innlogging!");
+										proceedWithLogin = true;					
+									}
+							} else 
+								loginStatus.append("Kan ikke logge inn; "+hResponse.getMessage());
+						} else
+
+							HealthCollectorMIDlet.showErrorMessage("FEIL", "Udefinert respons fra database-tjenesten");
+					
+					// Update UI
+					tfLoginStatus.setText(loginStatus.toString());
+					
+					if (proceedWithLogin) {
+						try
+							{
+								Thread.sleep(500); // Allow some time to show login succeeded!
+							} catch (InterruptedException e)
+							{
+								// TODO Auto-generated catch block
+								//e.printStackTrace();
+							}
+						FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
+					    menuScr.show();	
+					}
 			}
 
 		// Code based on example from Chap. 12 Protecting Network Data -

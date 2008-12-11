@@ -20,6 +20,8 @@ public interface IRESTCLOUDDB
 		public abstract HttpResponse checkAccess()
 				throws IOException;
 
+		public abstract String getServiceAddress();
+		
 		public abstract HttpResponse createContainer(String container)
 				throws IOException;
 		
