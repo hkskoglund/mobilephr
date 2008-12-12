@@ -6,6 +6,7 @@ import hks.itprojects.healthcollector.REST.IRESTCLOUDDB;
 import hks.itprojects.healthcollector.REST.MicrosoftSDS;
 import hks.itprojects.healthcollector.authorization.LoginUser;
 import hks.itprojects.healthcollector.network.HttpResponse;
+import hks.itprojects.healthcollector.utils.UtilityUI;
 
 import com.sun.lwuit.*;
 import com.sun.lwuit.events.*;
@@ -30,9 +31,6 @@ public class FormLogin extends Form implements ActionListener
 		// Commands
 		private Command cmdExit;
 		private Command cmdLogin;
-
-		
-		private LoginUser user = null;
 
 		private HealthCollectorMIDlet parentMIDlet = null;
 		
@@ -72,7 +70,8 @@ public class FormLogin extends Form implements ActionListener
 				// Status
 				Label lblStatus = new Label("Status");
 				addComponent(lblStatus);
-				tfLoginStatus = new TextArea(null,2,20,TextArea.UNEDITABLE);
+				tfLoginStatus = new TextArea(null,3,20,TextArea.UNEDITABLE);
+				UtilityUI.setSmall(tfLoginStatus);
 				addComponent(tfLoginStatus);
 
 				// Commands
@@ -93,6 +92,7 @@ public class FormLogin extends Form implements ActionListener
 		 */
 		private void getLoginAuthorization()
 			{
+				LoginUser user = null;
 				
 			RecordStore rs = openAuthorizationDB();
 				
@@ -102,6 +102,7 @@ public class FormLogin extends Form implements ActionListener
 						if (numrec == 1) {
 				            // Retrive user from DB
 							user = new LoginUser();
+							HealthCollectorMIDlet.setLoginUser(user);
 							user.fromByteArray(rs.getRecord(1));
 							// Update UI
 							tfUsername.setText(user.getUserName());
@@ -138,12 +139,11 @@ public class FormLogin extends Form implements ActionListener
 						rs.closeRecordStore();
 					} catch (RecordStoreNotOpenException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database er ikke åpen; "+e.getMessage());
+						
 					} catch (RecordStoreException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database feil ved aksess; "+e.getMessage());
 					}
 			}
 		
@@ -160,22 +160,23 @@ public class FormLogin extends Form implements ActionListener
 				return rs;
 			}
 		
-		private void saveLoginUser(String username, String password)
+		private int saveLoginUser(String username, String password)
 			{
 				boolean update  = false;
+				LoginUser user = HealthCollectorMIDlet.getLoginUser();
 			
 				// Validate
 				if (username == null || password == null)
 					{
 						HealthCollectorMIDlet.showErrorMessage("BRUKERNAVN/PASSORD","Brukernavn eller passord ikke definert");
-						return;
+						return -1;
 						
 					}
 				
 				if (username.length()==0 || password.length()==0)
 					{
 						HealthCollectorMIDlet.showErrorMessage("BRUKERNAVN/PASSORD","Brukernavn eller passord ikke angitt");
-					    return;		
+					    return -1;		
 					}
 				
 			
@@ -228,6 +229,8 @@ public class FormLogin extends Form implements ActionListener
 					{
 						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database feil ved aksess; "+e.getMessage());
 					}
+					
+			return 0;
 			}
 		
 		public void actionPerformed(ActionEvent ae)
@@ -247,12 +250,21 @@ public class FormLogin extends Form implements ActionListener
 			{
 			     StringBuffer loginStatus = new StringBuffer();
 	             boolean proceedWithLogin = false;
+	             String username = tfUsername.getText();
+	             String password = tfPassword.getText();
 				
 				
-				saveLoginUser(tfUsername.getText(),tfPassword.getText());
+			int status = saveLoginUser(username,password);
+			if (status == -1)
+				return;
+			
+			LoginUser user = HealthCollectorMIDlet.getLoginUser();
+			
 				   cloudDB = new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),this.authorityID,user.getUserName(),user.getPassword());
+				   
 				   loginStatus.append(cloudDB.getServiceName()+"\n");
 				   loginStatus.append(cloudDB.getServiceAddress()+"\n");
+			
 				   HttpResponse hResponse = null;
 				   try
 					{

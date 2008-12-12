@@ -1,0 +1,10 @@
+MIDlet-1: HealthCollector,/Heart.png,hks.itprojects.healthcollector.UI.HealthCollectorMIDlet
+MIDlet-Description: Allows registration/overview of bloodpressure data at Microsoft SDS cloud
+MIDlet-Icon: /Heart.png
+MIDlet-Jar-Size: 458343
+MIDlet-Jar-URL: HealthCollector.jar
+MIDlet-Name: HealthCollector
+MIDlet-Vendor: Henning Knut Skoglund
+MIDlet-Version: 1.0.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0

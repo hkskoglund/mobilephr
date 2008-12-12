@@ -13,6 +13,7 @@ import hks.itprojects.healthcollector.ListRendering.WoundRenderer;
 import hks.itprojects.healthcollector.PHR.Wound;
 import hks.itprojects.healthcollector.REST.IRESTCLOUDDB;
 import hks.itprojects.healthcollector.REST.MicrosoftSDS;
+import hks.itprojects.healthcollector.authorization.LoginUser;
 import hks.itprojects.healthcollector.backgroundTasks.SendWoundInBackground;
 import hks.itprojects.healthcollector.utils.Utility;
 import hks.itprojects.healthcollector.utils.UtilityUI;
@@ -73,7 +74,13 @@ public class FormWoundOverview extends Form implements ActionListener, Selection
 		super(title);
 		this.parentMIDlet = parentMIDlet;
 	    this.setLayout(new BoxLayout(BoxLayout.Y_AXIS));   
-		cloudDB  =  new MicrosoftSDS(HealthCollectorMIDlet.getIMEI());
+	    
+	    LoginUser user = HealthCollectorMIDlet.getLoginUser();
+		
+	    cloudDB  =  new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),
+				HealthCollectorMIDlet.getAuthorityID(),
+				user.getUserName(),
+				user.getPassword());
 		
 		setupMasterOverview();
 		setupDetails();

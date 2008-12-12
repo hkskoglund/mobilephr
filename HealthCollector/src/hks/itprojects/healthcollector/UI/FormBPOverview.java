@@ -5,6 +5,7 @@ import hks.itprojects.healthcollector.ListRendering.BloodPressureRenderer;
 import hks.itprojects.healthcollector.PHR.*;
 import hks.itprojects.healthcollector.REST.IRESTCLOUDDB;
 import hks.itprojects.healthcollector.REST.MicrosoftSDS;
+import hks.itprojects.healthcollector.authorization.LoginUser;
 import hks.itprojects.healthcollector.utils.Utility;
 import hks.itprojects.healthcollector.utils.UtilityUI;
 
@@ -72,7 +73,11 @@ public class FormBPOverview extends Form implements ActionListener, SelectionLis
     public FormBPOverview(String title, final HealthCollectorMIDlet parentMIDlet) {
         super(title);
         this.parentMIDlet = parentMIDlet;
-        cloudDB  =  new MicrosoftSDS(HealthCollectorMIDlet.getIMEI());
+        
+        LoginUser user = HealthCollectorMIDlet.getLoginUser();
+        cloudDB  =  new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),
+        							HealthCollectorMIDlet.getAuthorityID(),
+        							user.getUserName(),user.getPassword());
         
        // this.setScrollableY(false); 
         

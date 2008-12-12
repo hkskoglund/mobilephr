@@ -24,12 +24,6 @@ import com.sun.lwuit.list.ListModel;
 public class MicrosoftSDS implements IRESTCLOUDDB
 	{
 
-		// Change these settings to your own Microsoft SQL DataService-settings
-
-		final public static String DefaultUserName = "hkscloudtest";
-		final public static String DefaultPassword = "PASSWORD";
-		final public static String DefaultAuthorityID = "hks";
-
 		// Credentials
 		private String UserName;
 		private String Password;
@@ -55,15 +49,6 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 		// manager
 		private IConnection netManager = null;
 
-		public MicrosoftSDS(String IMEI)
-			{
-				this.AuthorityId = MicrosoftSDS.DefaultAuthorityID;
-				this.UserName = MicrosoftSDS.DefaultUserName;
-				this.Password = MicrosoftSDS.DefaultPassword;
-				this.uniqueUserId = IMEI;
-
-				setupNetManager(UserName, Password);
-			}
 
 		public MicrosoftSDS(String IMEI, String AuthorityId, String username,
 				String password)
