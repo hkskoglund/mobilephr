@@ -43,6 +43,7 @@ public class FormLoginSDS extends Form implements ActionListener
 			{
 				super("Innlogging");
 				this.parentMIDlet = parentMIDlet;
+				
 				this.setTransitionOutAnimator(CommonTransitions
 						.createFade(1000));
 
@@ -162,7 +163,7 @@ public class FormLoginSDS extends Form implements ActionListener
 				RecordStore rs = null;
 		
 				try {
-					rs = RecordStore.openRecordStore("Authorization", true, RecordStore.AUTHMODE_PRIVATE, true);
+					rs = RecordStore.openRecordStore(AUTHORIZATIONSTORE, true, RecordStore.AUTHMODE_PRIVATE, true);
 				    
 				} catch (RecordStoreException rse) {
 					HealthCollectorMIDlet.showErrorMessage("FEIL","Problemer med tilgang til autorisasjons informasjon i RMS; "+rse.getMessage());
@@ -175,7 +176,7 @@ public class FormLoginSDS extends Form implements ActionListener
 			{
 				try
 					{
-						RecordStore.deleteRecordStore("Authorization");
+						RecordStore.deleteRecordStore(AUTHORIZATIONSTORE);
 					} catch (RecordStoreNotFoundException e)
 					{
 						// TODO Auto-generated catch block

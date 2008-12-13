@@ -6,6 +6,7 @@ public class UtilityUI {
 	// Sets bold font on label headings
     public static void setMediumBold(Component comp)
     {
+    	
         comp.getStyle().setFont(Font.createSystemFont(Font.FACE_SYSTEM, 
         		Font.STYLE_BOLD, Font.SIZE_MEDIUM));
     }
@@ -27,4 +28,6 @@ public class UtilityUI {
         {
             btn.setText(date.toString());
         }
+    
+    
 }

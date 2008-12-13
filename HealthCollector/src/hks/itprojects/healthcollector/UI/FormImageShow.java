@@ -2,8 +2,12 @@ package hks.itprojects.healthcollector.UI;
 
 
 
+import java.util.Date;
+
 import hks.itprojects.healthcollector.ListModels.Thumbnail;
 import hks.itprojects.healthcollector.ListModels.ThumbnailCloudModel;
+import hks.itprojects.healthcollector.utils.Utility;
+import hks.itprojects.healthcollector.utils.UtilityUI;
 
 import com.sun.lwuit.Command;
 import com.sun.lwuit.Display;
@@ -12,6 +16,7 @@ import com.sun.lwuit.Image;
 import com.sun.lwuit.Label;
 import com.sun.lwuit.events.ActionEvent;
 import com.sun.lwuit.events.ActionListener;
+import com.sun.lwuit.list.DefaultListCellRenderer;
 
 public class FormImageShow extends Form implements ActionListener
 	{
@@ -26,6 +31,9 @@ public class FormImageShow extends Form implements ActionListener
 		
 	public FormImageShow(ThumbnailCloudModel tModel, FormWoundOverview parentForm)
 		{
+		
+			this.setMenuCellRenderer(new DefaultListCellRenderer(false));
+	    	
 			this.parentForm = parentForm;
 			
 			maxSize = tModel.getSize();
@@ -80,8 +88,13 @@ public class FormImageShow extends Form implements ActionListener
 			Thumbnail t = (Thumbnail)tModel.getItemAt(index);
 			Image img = Image.createImage(t.getThumbnailData(), 0, t.getThumbnailData().length);
 			img = img.rotate(90); // Landscape mode
-			img = img.scaledHeight(Display.getInstance().getDisplayHeight()-40);
+			img = img.scaledHeight(Display.getInstance().getDisplayHeight()-65);
 			lblImage.setIcon(img);
+			
+			// Form title
+			Date date = new Date();
+			date.setTime(t.getLastModified());
+			setTitle(Utility.formatDate(date));
 				
 		}
 
