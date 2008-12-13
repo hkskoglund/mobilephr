@@ -28,7 +28,7 @@ public interface IRESTCLOUDDB
 		public abstract HttpResponse createWoundThumbnailReference(String woundId, Thumbnail thumbnail) throws IOException;
 
 		
-		public abstract boolean containerExist(String woundContainer) throws IOException;
+		public abstract boolean containerExist(String container) throws IOException;
 
 		public abstract HttpResponse createBloodPressure(
 				BloodPressure bloodPressure) throws IOException;

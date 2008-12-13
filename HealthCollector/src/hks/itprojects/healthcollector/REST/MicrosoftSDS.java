@@ -39,10 +39,10 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 
 			}
 
-		private final String sdsContentType = "application/x-ssds+xml";
+		private static final String sdsContentType = "application/x-ssds+xml";
 
-		private final String phrContainer = "PHR";
-
+		public static final String PHRContainer = "PHR";
+		
 		private String uniqueUserId;
 
 		// SDS REST API requires https functionality provided by a connection
@@ -275,7 +275,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 						+ propertyDiastolic + "\n" + propertyHR + "\n"
 						+ propertyDate + "\n" + entityEnd;
 
-				HttpResponse hResponse = createEntity(phrContainer,
+				HttpResponse hResponse = createEntity(PHRContainer,
 						xmlBloodpressure);
 
 				return hResponse;
@@ -309,7 +309,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 						+ propertyDate + "\n" + entityEnd;
 
 				// Store wound entity
-				HttpResponse hResponse = createEntity(phrContainer, xmlWound);
+				HttpResponse hResponse = createEntity(PHRContainer, xmlWound);
 
 				return hResponse;
 
@@ -404,7 +404,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				// Forward to REST-api which then forwards to NET-api and gives
 				// XML
 				// result
-				HttpResponse hResponse = query(phrContainer, query.toString());
+				HttpResponse hResponse = query(PHRContainer, query.toString());
 
 				String result = hResponse.getXml();
 				if (result != null)
@@ -437,7 +437,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				// Forward to REST-api which then forwards to NET-api and gives
 				// XML
 				// result
-				HttpResponse hResponse = query(phrContainer, query.toString());
+				HttpResponse hResponse = query(PHRContainer, query.toString());
 
 				String result = hResponse.getXml();
 				if (result != null)

@@ -47,11 +47,31 @@ public class FormLoginSDS extends Form implements ActionListener
 				this.setTransitionOutAnimator(CommonTransitions
 						.createFade(1000));
 
+				// Layout-management
 				BoxLayout boxLayout = new BoxLayout(BoxLayout.Y_AXIS);
 				this.setLayout(boxLayout);
-				
 					
-				// Heading
+				setupLoginLabels();
+
+				setupCommands();
+				
+				getLoginAuthorization();
+
+			}
+
+		private void setupCommands()
+			{
+				cmdExit = new Command("Avslutt");
+				cmdLogin = new Command("LoggInn");
+				addCommand(cmdLogin);
+				addCommand(cmdExit);
+				setBackCommand(cmdExit);
+				setCommandListener(this);
+			}
+
+		private void setupLoginLabels()
+			{
+				// Lock-icon Heading
 				Image imgLock = HealthCollectorMIDlet.loadImage("/Lock.png");
 				imgLock.scaled(100, 100);
 				Label lblLock = new Label(imgLock);
@@ -76,24 +96,12 @@ public class FormLoginSDS extends Form implements ActionListener
 				tfPassword = new TextArea(null, 1, 1, TextArea.PASSWORD);
 				addComponent(tfPassword);
 				
-				// Status
+				// Login Status
 				Label lblStatus = new Label("Status");
 				addComponent(lblStatus);
 				tfLoginStatus = new TextArea(null,3,20,TextArea.UNEDITABLE);
 				UtilityUI.setSmall(tfLoginStatus);
 				addComponent(tfLoginStatus);
-
-				// Commands
-
-				cmdExit = new Command("Avslutt");
-				cmdLogin = new Command("LoggInn");
-				addCommand(cmdLogin);
-				addCommand(cmdExit);
-				setBackCommand(cmdExit);
-				setCommandListener(this);
-				
-				getLoginAuthorization();
-
 			}
 
 		/**
@@ -124,20 +132,20 @@ public class FormLoginSDS extends Form implements ActionListener
 			    
 			    catch (RecordStoreNotOpenException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database er ikke åpen; "+e.getMessage());
+						
 					} catch (InvalidRecordIDException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Ugyldig post id. til intern tlf. database; "+e.getMessage());
+						
 					} catch (IOException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","I/U-feil ved aksess til post i intern tlf. database; "+e.getMessage());
+						
 					} catch (RecordStoreException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Feil ved aksess til intern tlf. database; "+e.getMessage());
+						
 					}
 					
 					closeAuthorizationDB(rs);
@@ -179,12 +187,12 @@ public class FormLoginSDS extends Form implements ActionListener
 						RecordStore.deleteRecordStore(AUTHORIZATIONSTORE);
 					} catch (RecordStoreNotFoundException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Fant ikke intern telefon database; "+e.getMessage());
+						
 					} catch (RecordStoreException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						HealthCollectorMIDlet.showErrorMessage("FEIL","Feil ved aksess til intern telefon database; "+e.getMessage());
+									
 					}
 			}
 		
@@ -313,7 +321,11 @@ public class FormLoginSDS extends Form implements ActionListener
 				   loginStatus.append(cloudDB.getServiceName()+"\n");
 				   loginStatus.append(cloudDB.getServiceAddress()+"\n");
 			
+				   // Try to login by accessing the database service DNS with
+				   // login credentials (basic authentication)
+				   
 				   HttpResponse hResponse = null;
+				   
 				   try
 					{
 					    hResponse = cloudDB.checkAccess();
@@ -339,16 +351,24 @@ public class FormLoginSDS extends Form implements ActionListener
 					tfLoginStatus.setText(loginStatus.toString());
 					
 					if (proceedWithLogin) {
-						try
-							{
-								Thread.sleep(500); // Allow some time to show login succeeded!
-							} catch (InterruptedException e)
-							{
-								// TODO Auto-generated catch block
-								//e.printStackTrace();
-							}
-						FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
-					    menuScr.show();	
+								try
+									{
+										// Check for existence of PHR container to store health entities in,
+										// like blood pressure and wounds
+										
+										if (!cloudDB.containerExist(MicrosoftSDS.PHRContainer))
+											cloudDB.createContainer(MicrosoftSDS.PHRContainer);
+						
+										// We are now ready to invoke the main menu
+										FormMainMenu menuScr = new FormMainMenu("Hoved Meny",parentMIDlet);
+									    menuScr.show();
+								
+									} catch (IOException e)
+									{
+										HealthCollectorMIDlet.showErrorMessage("FEIL", "Klarte ikke å verifisere aksess/opprette katalogen "+MicrosoftSDS.PHRContainer);
+																
+									} 
+							
 					}
 			}
 
