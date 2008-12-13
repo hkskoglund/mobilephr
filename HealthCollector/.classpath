@@ -4,7 +4,15 @@
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="org.elipse.mtj.JavaMEContainer/Sony Ericsson SDK 2.5.0 for the Java(TM) ME Platform(Emulator)/SonyEricsson_JP7_240x320_Emu"/>
 	<classpathentry exported="true" kind="lib" path="UITheme/LWUITThemes.zip"/>
-	<classpathentry exported="true" kind="lib" path="KXML2 library/kxml2-min-2.3.0.zip"/>
-	<classpathentry exported="true" kind="lib" path="LWUIT library/LWUIT.jar"/>
+	<classpathentry exported="true" kind="lib" path="KXML2 library/kxml2-min-2.3.0.zip">
+		<attributes>
+			<attribute name="javadoc_location" value="http://kxml.sourceforge.net/kxml2/javadoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="LWUIT library/LWUIT.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="https://lwuit.dev.java.net/javadocs/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

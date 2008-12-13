@@ -6,11 +6,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class LoginUser implements IByteSerialization
+public class LoginUserSDS implements IByteSerialization
 	{
 
-		private String userName;
-		private String password;
+		private String userName = null;
+		private String password = null;
+		private String authorityID = null;
 			
 		public void setUserName(String userName)
 			{
@@ -33,6 +34,15 @@ public class LoginUser implements IByteSerialization
 			}
 		
 		
+		public void setAuthorityID(String authorityID)
+			{
+					this.authorityID = authorityID;
+			}
+
+		public String getAuthorityID()
+			{
+					return authorityID;
+			}
 		// From http://developers.sun.com/mobility/midp/articles/databasemap/
 		// Accessed : 11 december 2008
 		
@@ -45,6 +55,8 @@ public class LoginUser implements IByteSerialization
 
 		    userName = din.readUTF();
 		    password = din.readUTF();
+		    authorityID = din.readUTF();
+		    
 
 		    din.close();
 		}
@@ -57,12 +69,16 @@ public class LoginUser implements IByteSerialization
 		    DataOutputStream dout = new DataOutputStream( bout );
 
 		    dout.writeUTF( getUserName() );
-		    dout.writeUTF( getPassword() );
+		    dout.writeUTF( getPassword()); // TO DO : Encryption
+		    dout.writeUTF( getAuthorityID());
 
 		    dout.close();
 
 		    return bout.toByteArray();
 		}
 
+		
+		
+		
 		
 	}

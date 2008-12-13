@@ -13,7 +13,7 @@ import hks.itprojects.healthcollector.ListRendering.WoundRenderer;
 import hks.itprojects.healthcollector.PHR.Wound;
 import hks.itprojects.healthcollector.REST.IRESTCLOUDDB;
 import hks.itprojects.healthcollector.REST.MicrosoftSDS;
-import hks.itprojects.healthcollector.authorization.LoginUser;
+import hks.itprojects.healthcollector.authorization.LoginUserSDS;
 import hks.itprojects.healthcollector.backgroundTasks.SendWoundInBackground;
 import hks.itprojects.healthcollector.utils.Utility;
 import hks.itprojects.healthcollector.utils.UtilityUI;
@@ -75,7 +75,7 @@ public class FormWoundOverview extends Form implements ActionListener, Selection
 		this.parentMIDlet = parentMIDlet;
 	    this.setLayout(new BoxLayout(BoxLayout.Y_AXIS));   
 	    
-	    LoginUser user = HealthCollectorMIDlet.getLoginUser();
+	    LoginUserSDS user = HealthCollectorMIDlet.getLoginUser();
 		
 	    cloudDB  =  new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),
 				HealthCollectorMIDlet.getAuthorityID(),
@@ -226,10 +226,10 @@ public class FormWoundOverview extends Form implements ActionListener, Selection
 			
 			cmdMenu = new Command("HovedMeny");
 			cmdBack = new Command("Tilbake");
-			cmdFullScreen = new Command("Vis Fullskjerm");
-			cmdGetThumbnails = new Command("Hent bilder");
-			cmdImportImages = new Command("Importer bilder");
-			cmdSend = new Command("Send importerte");
+			cmdFullScreen = new Command("Fullskjerm");
+			cmdGetThumbnails = new Command("Hent");
+			cmdImportImages = new Command("Importer");
+			cmdSend = new Command("Send");
 			
 			addCommand(cmdMenu);
 			addCommand(cmdBack);

@@ -5,7 +5,7 @@ import hks.itprojects.healthcollector.ListRendering.BloodPressureRenderer;
 import hks.itprojects.healthcollector.PHR.*;
 import hks.itprojects.healthcollector.REST.IRESTCLOUDDB;
 import hks.itprojects.healthcollector.REST.MicrosoftSDS;
-import hks.itprojects.healthcollector.authorization.LoginUser;
+import hks.itprojects.healthcollector.authorization.LoginUserSDS;
 import hks.itprojects.healthcollector.utils.Utility;
 import hks.itprojects.healthcollector.utils.UtilityUI;
 
@@ -20,7 +20,6 @@ import com.sun.lwuit.geom.*;
 import java.io.IOException;
 
 import org.xmlpull.v1.XmlPullParserException;
-
 
 /**
  *
@@ -74,7 +73,7 @@ public class FormBPOverview extends Form implements ActionListener, SelectionLis
         super(title);
         this.parentMIDlet = parentMIDlet;
         
-        LoginUser user = HealthCollectorMIDlet.getLoginUser();
+        LoginUserSDS user = HealthCollectorMIDlet.getLoginUser();
         cloudDB  =  new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),
         							HealthCollectorMIDlet.getAuthorityID(),
         							user.getUserName(),user.getPassword());

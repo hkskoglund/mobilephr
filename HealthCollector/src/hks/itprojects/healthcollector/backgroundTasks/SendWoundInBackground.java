@@ -12,7 +12,7 @@ import hks.itprojects.healthcollector.PHR.Wound;
 import hks.itprojects.healthcollector.REST.IRESTCLOUDDB;
 import hks.itprojects.healthcollector.REST.MicrosoftSDS;
 import hks.itprojects.healthcollector.UI.HealthCollectorMIDlet;
-import hks.itprojects.healthcollector.authorization.LoginUser;
+import hks.itprojects.healthcollector.authorization.LoginUserSDS;
 import hks.itprojects.healthcollector.network.HttpResponse;
 
 public class SendWoundInBackground implements Runnable {
@@ -28,7 +28,7 @@ public class SendWoundInBackground implements Runnable {
 	public SendWoundInBackground(Wound wound, boolean sendOnlyThumbnails) {
 		this.wound = wound;
 		this.sendOnlyThumbnails = sendOnlyThumbnails;
-		LoginUser user = HealthCollectorMIDlet.getLoginUser();
+		LoginUserSDS user = HealthCollectorMIDlet.getLoginUser();
 		
 		cloudDB = new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),
 				HealthCollectorMIDlet.getAuthorityID(),

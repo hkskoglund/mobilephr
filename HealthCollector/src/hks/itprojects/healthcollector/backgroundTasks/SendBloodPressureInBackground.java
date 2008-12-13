@@ -8,7 +8,7 @@ import com.sun.lwuit.Display;
 
 import hks.itprojects.healthcollector.PHR.BloodPressure;
 import hks.itprojects.healthcollector.UI.HealthCollectorMIDlet;
-import hks.itprojects.healthcollector.authorization.LoginUser;
+import hks.itprojects.healthcollector.authorization.LoginUserSDS;
 import hks.itprojects.healthcollector.network.HttpResponse;
 
 import hks.itprojects.healthcollector.REST.*;
@@ -31,7 +31,7 @@ public class SendBloodPressureInBackground implements Runnable {
 	
 	public void run() {
 		// Currently only support for Microsoft SQL Data Services (SDS)
-		LoginUser user = HealthCollectorMIDlet.getLoginUser();
+		LoginUserSDS user = HealthCollectorMIDlet.getLoginUser();
 		IRESTCLOUDDB cloudDB = new MicrosoftSDS(HealthCollectorMIDlet.getIMEI(),
 		  HealthCollectorMIDlet.getAuthorityID(),
 		  user.getUserName(),

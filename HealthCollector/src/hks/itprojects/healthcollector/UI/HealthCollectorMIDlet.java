@@ -27,7 +27,7 @@ package hks.itprojects.healthcollector.UI;
 // and expanded/rewrote it to generate a simple PHR service using Microsoft SQL
 // data service
 
-import hks.itprojects.healthcollector.authorization.LoginUser;
+import hks.itprojects.healthcollector.authorization.LoginUserSDS;
 
 import javax.microedition.midlet.*;
 import java.io.*;
@@ -45,21 +45,20 @@ public class HealthCollectorMIDlet extends MIDlet
 				return IMEI;
 			}
 	
-		private static LoginUser User = null;
+		private static LoginUserSDS User = null;
 		
-		public static LoginUser getLoginUser()
+		public static LoginUserSDS getLoginUser()
 		{
 			return User;
 		}
-		public static void setLoginUser(LoginUser user)
+		public static void setLoginUser(LoginUserSDS user)
 		{
 			User = user;
 		}
 		
-		private static final String AuthorityID = "hks";
 		public static String getAuthorityID()
 		{
-			return AuthorityID;
+			return User.getAuthorityID();
 		}
 		
 		private String platform = System.getProperty("microedition.platform");
@@ -80,10 +79,10 @@ public class HealthCollectorMIDlet extends MIDlet
 
 		private void login()
 			{
-				FormLogin loginScr;
+				FormLoginSDS loginScr;
 				// Login
 
-				loginScr = new FormLogin(this);
+				loginScr = new FormLoginSDS(this);
 
 				loginScr.show();
 			}
