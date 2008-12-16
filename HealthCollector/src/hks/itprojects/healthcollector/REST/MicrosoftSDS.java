@@ -72,14 +72,14 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 		/* (non-Javadoc)
 		 * @see hks.itprojects.healthcollector.REST.IRESTCLOUDDB#checkAccess()
 		 */
-		public HttpResponse checkAccess() throws IOException
+		public synchronized HttpResponse checkAccess() throws IOException
 			{
 				HttpResponse hResponse = netManager.readXML(AuthorityURI, sdsContentType);
 			    return hResponse;
 				
 			}
 
-		public boolean containerExist(String woundContainer)
+		public synchronized boolean containerExist(String woundContainer)
 				throws IOException
 			{
 				HttpResponse hResponse = netManager.readXML(this
@@ -94,7 +94,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 					return false;
 			}
 
-		public HttpResponse createContainer(String container)
+		public synchronized HttpResponse createContainer(String container)
 				throws IOException
 			{
 				String cont = "<s:Container xmlns:s='http://schemas.microsoft.com/sitka/2008/03/'>"
@@ -105,7 +105,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				return hResponse;
 			}
 
-		protected HttpResponse createEntity(String container, String xmlEntity)
+		protected  HttpResponse createEntity(String container, String xmlEntity)
 				throws IOException
 			{
 				if (!containerExist(container))
@@ -117,7 +117,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				return hResponse;
 			}
 
-		protected HttpResponse createBLOB(byte[] thumbnailData,
+		protected  HttpResponse createBLOB(byte[] thumbnailData,
 				String container, String MIMEType, String slug,
 				String contentDisposition) throws IOException
 			{
@@ -136,7 +136,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 		 * @param query
 		 * @return
 		 */
-		private String makeUriCompatible(String query)
+		private  String makeUriCompatible(String query)
 			{
 				String newQuery = Utility.replaceAll(query, " ", "%20"); // Removes
 																			// space
@@ -220,7 +220,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				return propertyDateTime;
 			}
 
-		public HttpResponse createBloodPressure(BloodPressure bloodPressure)
+		public synchronized HttpResponse createBloodPressure(BloodPressure bloodPressure)
 				throws IOException
 			{
 				// <Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -281,7 +281,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				return hResponse;
 			}
 
-		public HttpResponse createWound(Wound wound) throws IOException
+		public synchronized HttpResponse createWound(Wound wound) throws IOException
 			{
 
 				String id = "W" + uniqueUserId + Utility.getMilliSecondDate(); // Will
@@ -315,7 +315,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 
 			}
 
-		public HttpResponse createWoundThumbnail(String woundContainer,
+		public synchronized HttpResponse createWoundThumbnail(String woundContainer,
 				Thumbnail thumbnail) throws IOException
 			{
 				String jpegMIMEType = "image/jpeg";
@@ -332,7 +332,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 
 			}
 
-		public HttpResponse readWoundThumbnail(String woundContainer,
+		public synchronized HttpResponse readWoundThumbnail(String woundContainer,
 				Thumbnail thumbnail) throws IOException
 			{
 				String jpegMIMEType = "image/jpeg";
@@ -345,7 +345,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				return hResponse;
 			}
 
-		public HttpResponse createWoundThumbnailReference(
+		public synchronized HttpResponse createWoundThumbnailReference(
 				String woundContainer, Thumbnail thumbnail) throws IOException
 			{
 				String id = "TRef" + uniqueUserId
@@ -386,7 +386,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 
 			}
 
-		public void queryBloodPressures(String SortDirection, ListModel bpModel)
+		public synchronized void queryBloodPressures(String SortDirection, ListModel bpModel)
 				throws IOException, XmlPullParserException
 			{
 
@@ -419,7 +419,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 					}
 			}
 
-		public void queryWounds(String SortDirection, ListModel woundModel)
+		public synchronized void queryWounds(String SortDirection, ListModel woundModel)
 				throws IOException, XmlPullParserException
 			{
 
@@ -450,7 +450,7 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 					}
 			}
 
-		public void queryThumbnailReferences(String SortDirection,
+		public synchronized void queryThumbnailReferences(String SortDirection,
 				ListModel thumbnailReferenceModel, String woundContainer)
 				throws IOException, XmlPullParserException
 			{
@@ -909,12 +909,12 @@ public class MicrosoftSDS implements IRESTCLOUDDB
 				return d;
 			}
 
-		public String getServiceName()
+		public synchronized String getServiceName()
 			{
 				return "Microsoft SQL Data Service";
 			}
 
-		public String getServiceAddress()
+		public synchronized String getServiceAddress()
 			{
 				return getAuthorityURI();
 			}

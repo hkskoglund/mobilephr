@@ -109,7 +109,8 @@ public class FormLoginSDS extends Form implements ActionListener
 		 */
 		private void getLoginAuthorization()
 			{
-				LoginUserSDS user = null;
+				
+			LoginUserSDS user = null;
 				
 			RecordStore rs = openAuthorizationDB();
 				
@@ -121,7 +122,10 @@ public class FormLoginSDS extends Form implements ActionListener
 				            // Retrive user from DB
 							user = new LoginUserSDS();
 							user.fromByteArray(rs.getRecord(1));
+							rs.closeRecordStore();
+							
 							HealthCollectorMIDlet.setLoginUser(user);
+							
 							// Update UI
 							tfUsername.setText(user.getUserName());
 							tfPassword.setText(user.getPassword());
@@ -147,25 +151,8 @@ public class FormLoginSDS extends Form implements ActionListener
 						HealthCollectorMIDlet.showErrorMessage("FEIL","Feil ved aksess til intern tlf. database; "+e.getMessage());
 						
 					}
-					
-					closeAuthorizationDB(rs);
 			}
 
-		private void closeAuthorizationDB(RecordStore rs)
-			{
-				try
-					{
-						rs.closeRecordStore();
-					} catch (RecordStoreNotOpenException e)
-					{
-						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database er ikke åpen; "+e.getMessage());
-						
-					} catch (RecordStoreException e)
-					{
-						HealthCollectorMIDlet.showErrorMessage("FEIL","Autorisasjons database feil ved aksess; "+e.getMessage());
-					}
-			}
-		
 		private RecordStore openAuthorizationDB()
 			{
 				RecordStore rs = null;
@@ -225,7 +212,8 @@ public class FormLoginSDS extends Form implements ActionListener
 				RecordStore rs = openAuthorizationDB();
 				
 				try {
-		               // Case 1 : User already stored - record nr. 1
+					
+		           // Case 1 : User already stored - record nr. 1
 
 					if (userStored != null)
 					{
@@ -254,17 +242,21 @@ public class FormLoginSDS extends Form implements ActionListener
 					} else
 
 			// Case 2 : User not previously stored
+						
 				if (userStored == null && rs.getNumRecords()==0) {
 			       userStored = new LoginUserSDS();
+			       
 			       HealthCollectorMIDlet.setLoginUser(userStored);
+			       
 			       userStored.setPassword(password);
 			       userStored.setUserName(username);
 			       userStored.setAuthorityID(authorityID);
+			       
 					byte [] userdata = userStored.toByteArray();
-						 int recId =	rs.addRecord(userdata, 0, userdata.length);
-						}
+					int recId =	rs.addRecord(userdata, 0, userdata.length);
+				}
 				
-				closeAuthorizationDB(rs);
+				rs.closeRecordStore();
 				
 				} catch (IOException ioe)
 					{
@@ -299,6 +291,8 @@ public class FormLoginSDS extends Form implements ActionListener
 
 		private void performLogin()
 			{
+				setFocused(tfLoginStatus);
+				
 			     StringBuffer loginStatus = new StringBuffer();
 	             boolean proceedWithLogin = false;
 	             
